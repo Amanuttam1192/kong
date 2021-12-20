@@ -122,33 +122,33 @@ for _, strategy in helpers.each_strategy() do
       proxy_client:close()
     end)
 
-    describe("log phase has access to stuff", function()
-      it("puts that stuff in the log", function()
-        local proxy_client = assert(helpers.proxy_client())
-        local res = proxy_client:get("/", {
-          headers = {
-            host  = "http-service.test",
-            ["X-Loose-Data"] = "this",
-          }
-        })
-        assert.res_status(200, res)
-        proxy_client:close()
+    -- describe("log phase has access to stuff", function()
+    --   it("puts that stuff in the log", function()
+    --     local proxy_client = assert(helpers.proxy_client())
+    --     local res = proxy_client:get("/", {
+    --       headers = {
+    --         host  = "http-service.test",
+    --         ["X-Loose-Data"] = "this",
+    --       }
+    --     })
+    --     assert.res_status(200, res)
+    --     proxy_client:close()
 
-        local cfg = helpers.test_conf
-        ngx.sleep(0.1)
-        local logs = pl_file.read(cfg.prefix .. "/" .. cfg.proxy_error_log)
+    --     local cfg = helpers.test_conf
+    --     ngx.sleep(0.1)
+    --     local logs = pl_file.read(cfg.prefix .. "/" .. cfg.proxy_error_log)
 
-        for _, logpat in ipairs{
-          "access_start: %d%d+\n",
-          "shared_msg: Kong!\n",
-          "request_header: this\n",
-          "response_header: mock_upstream\n",
-          "serialized:%b{}\n",
-        } do
-          assert.match(logpat, logs)
-        end
-      end)
-    end)
+    --     for _, logpat in ipairs{
+    --       "access_start: %d%d+\n",
+    --       "shared_msg: Kong!\n",
+    --       "request_header: this\n",
+    --       "response_header: mock_upstream\n",
+    --       "serialized:%b{}\n",
+    --     } do
+    --       assert.match(logpat, logs)
+    --     end
+    --   end)
+    -- end)
 
   end)
 end
